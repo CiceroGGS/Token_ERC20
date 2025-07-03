@@ -7,36 +7,48 @@ contract Token {
     uint8 public decimal;
     uint8 public totalSupply;
 
-    mapping(address => uint256) balance;
-    mapping(address => mapping(address => uint256)) allowance;
+    mapping(address => uint256) balances;
+    mapping(address => mapping(address => uint256)) allowances;
 
     event Transfer(address from, address to, uint256 amount);
     event Approval(address _owner, address _spender, uint256 amount);
 
     function balanceOf(address owner) public view returns (uint256) {
-        uint256 balanceOfUser = balance[owner];
+        uint256 balanceOfUser = balances[owner];
         return balanceOfUser;
     }
 
     function transfer(address _to, uint256 _value) public {
-        require(balance[msg.sender] >= 0, "INSUFFICIENT_AMOUNT");
+        require(balances[msg.sender] >= 0, "INSUFFICIENT_AMOUNT");
 
-        balance[_to] += _value;
-        balance[msg.sender] -= _value;
+        balances[msg.sender] -= _value;
+        balances[_to] += _value;
 
         emit Transfer(msg.sender, _to, _value);
     }
 
     function approve(address _spender, uint256 _value) public {
-        allowance[msg.sender][_spender] = _value;
+        allowances[msg.sender][_spender] = _value;
 
         emit Approval(msg.sender, _spender, _value);
     }
 
     function transferFrom(address _from, address _to, uint256 _value) public {
         require(
-            allowance[_from][msg.sender] >= _value,
+            allowances[_from][msg.sender] >= _value,
             "INSUFFICIENT_ALLOWNCE"
         );
+
+        balances[_from] -= _value;
+        balances[_to] += _value;
+
+        emit Transfer(_from, _to, _value);
+    }
+
+    function allowance(
+        address _owner,
+        address _spender
+    ) public view returns (uint256) {
+        return allowances[_owner][_spender];
     }
 }
