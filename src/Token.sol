@@ -5,7 +5,7 @@ contract Token {
     string public name;
     string public symbol;
     uint8 public decimal;
-    uint8 public totalSupply;
+    uint256 public totalSupply;
 
     mapping(address => uint256) balances;
     mapping(address => mapping(address => uint256)) allowances;
@@ -57,6 +57,7 @@ contract Token {
         symbol = "CTL";
         decimal = 18;
 
-        balances[msg.sender] = 10000 * 10e18;
+        totalSupply = 10000 * 10e18;
+        balances[msg.sender] = totalSupply;
     }
 }
