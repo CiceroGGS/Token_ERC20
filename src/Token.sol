@@ -51,4 +51,12 @@ contract Token {
     ) public view returns (uint256) {
         return allowances[_owner][_spender];
     }
+
+    constructor() {
+        name = "Cicero Token Solidity";
+        symbol = "CTL";
+        decimal = 18;
+
+        balances[msg.sender] = 10000 * 10e18;
+    }
 }
